@@ -1,3 +1,5 @@
+import atlantafx.base.theme.PrimerDark;
+import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -20,6 +22,9 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        //Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        FontManager font = new FontManager("fonts/Jura-Regular.ttf");
+        font.LoadFont();
         setPrimaryStage(primaryStage);
         MainApplication.primaryStage = primaryStage;
         primaryStage.setTitle("Poker Project");

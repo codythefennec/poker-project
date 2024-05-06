@@ -1,0 +1,28 @@
+@font-face {
+    font-family: Jura;
+    src: url('Jura-Regular.ttf');
+}
+
+.title_button{
+    -fx-font-size: 40px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: WHITE;
+    -fx-background-color: rgb(112,112,112, 1);
+    -fx-background-radius: 50px;
+}
+
+.title_button:hover {
+    -fx-font-size: 40px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: BLACK;
+    -fx-background-color: rgb(112,112,112, 1);
+    -fx-background-radius: 50px;
+}
+
+.title_button:pressed {
+    -fx-font-size: 40px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: WHITE;
+    -fx-background-color: rgb(49, 49, 49, 1);
+    -fx-background-radius: 50px;
+}
