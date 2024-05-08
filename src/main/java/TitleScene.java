@@ -26,7 +26,7 @@ public class TitleScene {
         this.program = program;
     }
 
-    public Scene buildScene() {
+    private Scene buildScene() {
         // init root
         Group root = new Group();
 
@@ -72,8 +72,8 @@ public class TitleScene {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                // TODO send to game screen
-                // program.setScene();
+                GameScene game = new GameScene(program);
+                program.setScene(game.fetchScene());
             }
         });
         //startButton.setFont(font.fontOfSize(75));

@@ -1,5 +1,7 @@
 import atlantafx.base.theme.PrimerDark;
 import atlantafx.base.theme.PrimerLight;
+import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -14,7 +16,8 @@ import java.io.InputStream;
 
 public class MainApplication extends Application {
     private static Stage primaryStage;
-    private SceneManager manager;
+    private GameScene gameScene;
+    private TitleScene titleScene;
 
     // program sizes
     private final double PROG_WIDTH = 1080;
@@ -29,7 +32,8 @@ public class MainApplication extends Application {
         MainApplication.primaryStage = primaryStage;
         primaryStage.setTitle("Poker Project");
         primaryStage.show();
-        TitleScene titleScene = new TitleScene(this);
+        gameScene = new GameScene(this);
+        titleScene = new TitleScene(this);
 
         // start at this scene
         setScene(titleScene.fetchScene());
