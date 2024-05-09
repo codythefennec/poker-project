@@ -2,10 +2,12 @@ import javafx.animation.TranslateTransition;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -26,6 +28,9 @@ public class GameUI {
     // groups
     Group cardAreaGroup;
     Group buttonAreaGroup;
+
+    // hboxes
+    HBox cardAreaHBox;
 
     // Control Objects
     private Node upCameraArea;
@@ -61,21 +66,33 @@ public class GameUI {
 
         // button area group
         buttonAreaGroup = new Group();
+        buttonAreaGroup.setTranslateX(0);
+        buttonAreaGroup.setTranslateY(645);
 
-        buttonArea = new Rectangle(0, 645, 1080, 246);
+        buttonArea = new Rectangle(0, 0, 1080, 246);
         buttonArea.setFill(grey3);
         buttonArea.setArcHeight(50);
         buttonArea.setArcWidth(50);
         buttonAreaGroup.getChildren().add(buttonArea);
 
+        //      buttons added here
+
         // card area group
         cardAreaGroup = new Group();
+        cardAreaGroup.setTranslateX(124);
+        cardAreaGroup.setTranslateY(384);
 
-        cardArea = new Rectangle(124, 384, 831, 246);
+        cardArea = new Rectangle(0,0, 831, 246);
         cardArea.setFill(grey2);
         cardArea.setArcHeight(50);
         cardArea.setArcWidth(50);
         cardAreaGroup.getChildren().add(cardArea);
+
+        cardAreaHBox = new HBox();
+        cardAreaGroup.getChildren().add(cardAreaHBox);
+        cardAreaHBox.setTranslateX(32);
+        cardAreaHBox.setTranslateY(25);
+        cardAreaHBox.setSpacing(16);
 
         // create regions camera up / down
         upCameraArea = new Canvas(program.getWidth(), program.getHeight() / 2);
@@ -93,13 +110,28 @@ public class GameUI {
 
         // add to group
         root.getChildren().add(dealerIV);
+        root.getChildren().add(cardAreaGroup);
         root.getChildren().add(cardArea);
+        root.getChildren().add(cardAreaHBox);
+        root.getChildren().add(buttonAreaGroup);
         root.getChildren().add(buttonArea);
         root.getChildren().add(tempLabel);
         root.getChildren().add(upCameraArea);
         root.getChildren().add(downCameraArea);
 
         return root;
+    }
+
+    private ImageView makeCardUI(Card card) {
+        ImageView iv = new ImageView();
+        iv.setImage(card.getCardImage());
+        return iv;
+    }
+
+    public void fillPlayerHand(ArrayList<Card> arr) {
+        for (Card in : arr) {
+            cardAreaHBox.getChildren().add(makeCardUI(in));
+        }
     }
 
     public void moveCardAreaDown() {

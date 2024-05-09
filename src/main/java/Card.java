@@ -1,4 +1,5 @@
-import java.awt.*;
+import java.io.InputStream;
+import javafx.scene.image.Image;
 
 public class Card {
     // color of card - Translates to suit
@@ -14,6 +15,11 @@ public class Card {
         this.cardType = cardType;
     }
 
+    public Image getCardImage() {
+        String path = "cards/" + getCardTypeText() + "_" + cardColor.name().toLowerCase() + "Card.png";
+        return new Image(getInputStream(path));
+    }
+
     public ColorEnum getCardColor() {
         return cardColor;
     }
@@ -24,6 +30,17 @@ public class Card {
 
     public int getCardType() {
         return cardType;
+    }
+
+    public String getCardTypeText() {
+        return switch (cardType) {
+            case 1 -> "A";
+            case 2, 3, 4, 5, 6, 7, 8, 9, 10 -> Integer.toString(cardType);
+            case 11 -> "J";
+            case 12 -> "Q";
+            case 13 -> "K";
+            default -> "ERROR";
+        };
     }
 
     @Override
@@ -63,12 +80,18 @@ public class Card {
 
         public static SideEnum getFromColor(ColorEnum color) {
             return switch (color) {
-                case RED -> SideEnum.R;
-                case BLUE -> SideEnum.L;
-                case GREEN -> SideEnum.R;
-                case YELLOW -> SideEnum.L;
-                default -> null;
+                case RED, GREEN -> SideEnum.R;
+                case BLUE, YELLOW -> SideEnum.L;
             };
         }
+    }
+
+    private InputStream getInputStream(String path) {
+        return this.getClass().getClassLoader().getResourceAsStream(path);
+    }
+
+    public static void main(String[] args) {
+        Card card = new Card(ColorEnum.RED, SideEnum.getFromColor(ColorEnum.RED), 1);
+        card.getCardImage();
     }
 }

@@ -26,14 +26,13 @@ public class GameModel {
 
     // states
     private CameraState cameraState;
-    private TurnState turnState;
+    private TurnState turnState = TurnState.DealerDeals;
     private PlayerState playerState;
 
     public GameModel() {
-
     }
 
-    private void dealHand() {
+    public void dealHand() {
         // replaces when redealt, so no worries about clearing arrays
         dealerHand = CardGenerator.generateHand();
         playerHand = CardGenerator.generateHand();
@@ -61,5 +60,15 @@ public class GameModel {
     }
     public void setPlayerState(PlayerState playerState) {
         this.playerState = playerState;
+    }
+
+    // get player hand
+    public ArrayList<Card> getPlayerHand() {
+        return playerHand;
+    }
+
+    // get dealer's hand
+    public ArrayList<Card> getDealerHand() {
+        return dealerHand;
     }
 }
