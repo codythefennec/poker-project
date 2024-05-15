@@ -17,8 +17,6 @@ public class GameScene {
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
-                System.out.println(gameModel.getTurnState());
-
                 if (gameModel.getCameraState() == GameModel.CameraState.UP) {
                     // do something if the camera is up
                     //System.out.println("Camera Is Up");
@@ -54,6 +52,26 @@ public class GameScene {
                 if (gameModel.getTurnState() == GameModel.TurnState.PlayerTurn) {
                     // do something
                     //System.out.println("Turn state: PLAYER");
+                }
+
+                if (gameModel.getTurnState() == GameModel.TurnState.Reset) {
+                    // update info like wins losses money (?)
+
+                    // dump hands
+                    gameModel.getPlayerHand().clear();
+                    gameModel.getDealerHand().clear();
+
+                    // delete cards in display
+                    gameUI.emptyPlayerHand();
+
+                    // fill player && dealer
+                    gameModel.dealHand();
+
+                    // display hands
+                    gameUI.fillPlayerHand(gameModel.getPlayerHand());
+
+                    // set to player turn
+                    gameModel.setTurnState(GameModel.TurnState.PlayerTurn);
                 }
             }
         };

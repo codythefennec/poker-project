@@ -1,6 +1,6 @@
 @font-face {
     font-family: Jura;
-    src: url('fonts/Jura-Regular.ttf');
+    src: url('../fonts/Jura-Regular.ttf');
 }
 
 .title_button{
@@ -25,4 +25,83 @@
     -fx-text-fill: WHITE;
     -fx-background-color: rgb(49, 49, 49, 1);
     -fx-background-radius: 50px;
+}
+
+.game_button{
+    -fx-font-size: 48px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: WHITE;
+    -fx-background-color: rgb(112,112,112, 1);
+    -fx-background-radius: 50px;
+    -fx-pref-height: 89px;
+}
+
+.game_button:hover {
+    -fx-font-size: 48px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: BLACK;
+    -fx-background-color: rgb(112,112,112, 1);
+    -fx-background-radius: 50px;
+}
+
+.game_button:pressed {
+    -fx-font-size: 48px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: WHITE;
+    -fx-background-color: rgb(49, 49, 49, 1);
+    -fx-background-radius: 50px;
+}
+
+.bet_button {
+    -fx-font-size: 30px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: BLACK;
+    -fx-background-color: rgb(217,217,217, 1);
+    -fx-background-radius: 50px;
+    -fx-pref-width: 115px;
+    -fx-pref-height: 60px;
+}
+
+.bet_button:pressed {
+    -fx-font-size: 30px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: BLACK;
+    -fx-background-color: rgb(49,49,49, 1);
+    -fx-background-radius: 50px;
+    -fx-pref-width: 115px;
+    -fx-pref-height: 60px;
+}
+
+.bet_button:hover {
+    -fx-font-size: 30px;
+    -fx-font-family: "Jura";
+    -fx-text-fill: WHITE;
+    -fx-background-color: rgb(217,217,217, 1);
+    -fx-background-radius: 50px;
+    -fx-pref-width: 115px;
+    -fx-pref-height: 60px;
+}
+
+.graphic_button {
+    -fx-font-family: "Jura";
+    -fx-background-color: rgb(217,217,217, 0);
+    -fx-background-radius: 20px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+}
+
+.graphic_button:hover {
+    -fx-font-family: "Jura";
+    -fx-background-color: rgb(217,217,217,0.5);
+    -fx-background-radius: 20px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+}
+
+.graphic_button:pressed {
+    -fx-font-family: "Jura";
+    -fx-background-color: rgb(49,49,49, 1);
+    -fx-background-radius: 20px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
 }

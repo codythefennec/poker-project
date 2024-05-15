@@ -9,10 +9,21 @@ public class Card {
     // card type 1 - 13
     private final int cardType;
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    private boolean selected;
+
     public Card(ColorEnum cardColor, SideEnum cardSide, int cardType) {
         this.cardColor = cardColor;
         this.cardSide = cardSide;
         this.cardType = cardType;
+        this.selected = false;
     }
 
     public Image getCardImage() {
