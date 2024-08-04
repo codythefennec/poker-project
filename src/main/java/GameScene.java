@@ -11,27 +11,16 @@ public class GameScene {
 
     private AnimationTimer timer;
 
-    public static void command_wait(long millis) {
-        Object lock = new Object();
-
-        synchronized (lock) {
-            try {
-                lock.wait(millis);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    public static void force_update() {
-        // TODO consider (?)
-    }
-
     // init model && ui
     public GameScene(MainApplication program) {
         this.program = program;
         gameModel = new GameModel();
         gameUI = new GameUI(program, gameModel); // link by connecting in constructor so we can access game model
+        // conversation thread start point
+        Thread convoThread = new Thread(() -> {
+
+        });
+
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {

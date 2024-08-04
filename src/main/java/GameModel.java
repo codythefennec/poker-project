@@ -142,6 +142,7 @@ public class GameModel {
                 break;
             }
         }
+        System.out.println(sameSuit);
 
         // checking for straights
         boolean ascending = true;
