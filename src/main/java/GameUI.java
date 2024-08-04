@@ -1,4 +1,6 @@
+import javafx.animation.RotateTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,6 +18,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import org.w3c.dom.css.Rect;
 
 import javax.imageio.ImageIO;
 import java.io.IOException;
@@ -24,11 +27,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameUI {
+    public boolean ui_interrupts = false;
     private MainApplication program;
     private GameModel model;
     private Group returnRoot;
     private FontManager font = new FontManager("fonts/Jura-Regular.ttf");
     private Font label_font = font.fontOfSize(75);
+    private Font dealingTextFont = new FontManager("fonts/Jura-Regular.ttf").fontOfSize(45);
+
     // Consts
     private final Color grey3 = Color.rgb(18, 18, 18, 1);
     private final Color grey2 = Color.rgb(44, 44, 44, 1);
@@ -58,6 +64,7 @@ public class GameUI {
     private Button callButton;
     private Button betButton;
     private Button foldButton;
+    private Label moneyLabel;
 
     // bet group
     private Rectangle betBg1;
@@ -68,6 +75,12 @@ public class GameUI {
     private Button nahButton;
     private Label betAmountLabel;
     private Rectangle betAmountBg;
+
+    // "dealing..."
+    private Rectangle dealingGreyScale;
+    private Rectangle dealingTextBg;
+    private Rectangle dealingTextBgWhite;
+    private Label dealingText;
 
     public GameUI(MainApplication program, GameModel model) {
         this.program = program;
@@ -105,20 +118,13 @@ public class GameUI {
         buttonHBox.setLayoutY(659);
         buttonHBox.setPrefHeight(80);
 
-        callButton = new Button("Call");
-        callButton.getStyleClass().add("game_button");
-        callButton.setMinSize(244.35, 80);
-        callButton.setOnAction(e -> {
-            // button code
-            model.setTurnState(GameModel.TurnState.ShowCards);
-        });
-
         holdButton = new Button("Hold");
-        holdButton.setMinWidth(244.35);
+        holdButton.setMinWidth(496);
         holdButton.setMinHeight(89);
         holdButton.getStyleClass().add("game_button");
         holdButton.setOnAction(e -> {
-            // button code
+            holdButton.setText("Hold");
+            model.setTurnState(GameModel.TurnState.DealerReplaces);
         });
 
         betButton = new Button("Bet");
@@ -142,7 +148,7 @@ public class GameUI {
         });
 
         // add to hbox
-        buttonHBox.getChildren().addAll(callButton, holdButton, betButton, foldButton);
+        buttonHBox.getChildren().addAll(holdButton, betButton, foldButton);
 
         // card area group
         cardAreaGroup = new Group();
@@ -169,6 +175,12 @@ public class GameUI {
             model.setCameraState(GameModel.CameraState.DOWN);
         });
 
+        // game data
+        moneyLabel = new Label("$");
+        moneyLabel.setFont(dealingTextFont);
+        moneyLabel.setLayoutY(20);
+        moneyLabel.setLayoutX(20);
+
         // add to group
         root.getChildren().add(dealerIV);
         root.getChildren().add(cardAreaGroup);
@@ -178,8 +190,80 @@ public class GameUI {
         root.getChildren().add(buttonArea);
         root.getChildren().add(buttonHBox);
         root.getChildren().add(cameraMonitor);
+        root.getChildren().add(moneyLabel);
 
         return root;
+    }
+
+    public void updateMoneyLabel(int money) {
+        moneyLabel.setText(String.valueOf(money) + "$");
+    }
+
+    public void spawnDealingText() {
+        // dealing superbg
+        dealingGreyScale = new Rectangle();
+        dealingGreyScale.setLayoutX(0);
+        dealingGreyScale.setLayoutY(0);
+        dealingGreyScale.setWidth(program.getWidth());
+        dealingGreyScale.setHeight(program.getHeight());
+        dealingGreyScale.setOpacity(.5);
+        dealingGreyScale.setFill(Color.rgb(255,255,255));
+
+        dealingTextBgWhite = new Rectangle(278, 249, 485, 270);
+        dealingTextBgWhite.setArcWidth(90);
+        dealingTextBgWhite.setArcHeight(90);
+        dealingTextBgWhite.setFill(Color.rgb(0,0,0));
+
+        dealingTextBg = new Rectangle(327, 302, 387, 164);
+        dealingTextBg.setFill(Color.rgb(18, 18, 18));
+        dealingTextBg.setArcWidth(50);
+        dealingTextBg.setArcHeight(50);
+
+        dealingText = new Label("Dealing..");
+        dealingText.setTextFill(Color.WHITE);
+        dealingText.setLayoutX(421);
+        dealingText.setLayoutY(364);
+        dealingText.setFont(dealingTextFont);
+
+        returnRoot.getChildren().addAll(
+                dealingGreyScale,
+                dealingTextBgWhite,
+                dealingTextBg,
+                dealingText
+        );
+    }
+
+    public void removeDealingText() {
+        returnRoot.getChildren().removeAll(
+                dealingGreyScale,
+                dealingTextBgWhite,
+                dealingTextBg,
+                dealingText
+        );
+    }
+
+    public void updateDealingText() {
+        switch (dealingText.getText()) {
+            case "Dealing" -> {
+                dealingText.setText("Dealing.");
+            }
+
+            case "Dealing." -> {
+                dealingText.setText("Dealing..");
+            }
+
+            case "Dealing.." -> {
+                dealingText.setText("Dealing...");
+            }
+
+            case "Dealing..." -> {
+                dealingText.setText("Dealing");
+            }
+        }
+    }
+
+    public void setDealingText(String text) {
+        dealingText.setText(text);
     }
 
     private void spawnBetGroup(Group root) {
@@ -247,7 +331,9 @@ public class GameUI {
         submitBetButton.setOnAction(e -> {
             // submit bet
             // or sumn
+            model.bet(betDisplay);
             betDisplay = 0;
+            removeBetGroup(root);
         });
 
         betAmountBg = new Rectangle(570, 569, 203, 89);
@@ -321,9 +407,8 @@ public class GameUI {
                 for (Card in : model.getPlayerHand()) {
                     if (in.isSelected()) {
                         temp = true;
+                        break;
                     }
-
-                    System.out.println(temp);
                 }
 
                 if (temp) {
@@ -348,7 +433,10 @@ public class GameUI {
 
     public void removePlayerCard(int index) {
         cardAreaHBox.getChildren().remove(index);
-        // deletes instance / removes from screen
+    }
+
+    public void addPlayerCard(Card card) {
+        cardAreaHBox.getChildren().add(makeCardUI(card));
     }
 
     public void moveCardAreaDown() {

@@ -7,7 +7,6 @@ public class CardGenerator {
 
         for (int i = 0; i < 5; i++) {
             Card generatedCard = getRandCard();
-            System.out.println(generatedCard.toString());
             hand.add(generatedCard);
         }
 

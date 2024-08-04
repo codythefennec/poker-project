@@ -1,4 +1,6 @@
 import java.io.InputStream;
+import java.util.Comparator;
+
 import javafx.scene.image.Image;
 
 public class Card {
@@ -25,6 +27,20 @@ public class Card {
         this.cardType = cardType;
         this.selected = false;
     }
+
+    // comparator
+    static public Comparator<Card> cardComparator = new Comparator<Card>() {
+        @Override
+        public int compare(Card o1, Card o2) {
+            if (o1.getCardType() > o2.getCardType()) {
+                return 1;
+            } else if (o1.getCardType() == o2.getCardType()) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+    };
 
     public Image getCardImage() {
         String path = "cards/" + getCardTypeText() + "_" + cardColor.name().toLowerCase() + "Card.png";

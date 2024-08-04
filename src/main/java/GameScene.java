@@ -1,13 +1,31 @@
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 
 public class GameScene {
     private MainApplication program;
-    private GameModel gameModel;
-    private GameUI gameUI;
+    public GameModel gameModel;
+    public GameUI gameUI;
 
     private AnimationTimer timer;
+
+    public static void command_wait(long millis) {
+        Object lock = new Object();
+
+        synchronized (lock) {
+            try {
+                lock.wait(millis);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void force_update() {
+        // TODO consider (?)
+    }
 
     // init model && ui
     public GameScene(MainApplication program) {
@@ -17,6 +35,8 @@ public class GameScene {
         timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+                //System.out.println(gameModel.getTurnState());
+
                 if (gameModel.getCameraState() == GameModel.CameraState.UP) {
                     // do something if the camera is up
                     //System.out.println("Camera Is Up");
@@ -41,12 +61,37 @@ public class GameScene {
                 }
 
                 if (gameModel.getTurnState() == GameModel.TurnState.DealerDeals) {
-                    // if it's the turn where the dealer is dealing, fill the game logics "hand"
-                    gameModel.dealHand();
-                    // display
-                    gameUI.fillPlayerHand(gameModel.getPlayerHand());
-                    // change to player's turn
-                    gameModel.setTurnState(GameModel.TurnState.PlayerTurn);
+                    // display dealingSplash -- setup
+                    gameUI.spawnDealingText();
+
+                    // setup bet values
+                    gameModel.bet(3); // always bet 3 from start (buy in amount)
+
+                    Platform.runLater(() -> { // everything that runs after start up
+                        for (int i = 0; i < 10; i++) {
+                            // TODO update loading ticks -> "Dealing." "Dealing.." "Dealing..." repeat
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            gameUI.updateDealingText();
+                            System.out.println("Updating dealing text");
+                        }
+
+                        // fill game logic's hand
+                        gameModel.dealHand();
+
+                        // display hand
+                        gameUI.fillPlayerHand(gameModel.getPlayerHand());
+
+                        // now ''loading'' complete remove the splash
+                        gameUI.removeDealingText();
+
+                        // change to player's turn
+                        gameModel.setTurnState(GameModel.TurnState.PlayerTurn);
+                    });
                 }
 
                 if (gameModel.getTurnState() == GameModel.TurnState.PlayerTurn) {
@@ -64,15 +109,78 @@ public class GameScene {
                     // delete cards in display
                     gameUI.emptyPlayerHand();
 
-                    // fill player && dealer
-                    gameModel.dealHand();
-
-                    // display hands
-                    gameUI.fillPlayerHand(gameModel.getPlayerHand());
-
                     // set to player turn
-                    gameModel.setTurnState(GameModel.TurnState.PlayerTurn);
+                    gameModel.setTurnState(GameModel.TurnState.DealerDeals);
                 }
+
+                if (gameModel.getTurnState() == GameModel.TurnState.DealerReplaces) {
+                    // button code
+                    // iterate backwards so we dont have to account for the array shortening
+                    // empty selected cards
+                    for (int i = gameModel.getPlayerHand().size() - 1; i >= 0; i--) {
+                        if (gameModel.getPlayerHand().get(i).isSelected()) {
+                            int finalI = i;
+                                // THIS FUNCTION SHOULD REPLACE EXACTLY ONE CARD AT A TIME
+                                // remove selected card
+                                gameModel.getPlayerHand().remove(finalI);
+
+                                // remove that card on display
+                                gameUI.removePlayerCard(finalI);
+
+                                // replace card at same location
+                                gameModel.getPlayerHand().add(finalI, CardGenerator.getRandCard());
+
+                                // add card that was added back in game model
+                                gameUI.addPlayerCard(gameModel.getPlayerHand().get(finalI));
+
+                        }
+                    }
+
+                    Platform.runLater(() -> {
+                        // program wait here (?)
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        gameModel.setTurnState(GameModel.TurnState.ShowCards);
+                    });
+                }
+
+                if (gameModel.getTurnState() == GameModel.TurnState.ShowCards) {
+                    // we want to wait here before we go to reset
+                    gameUI.spawnDealingText();
+
+                    switch (gameModel.checkWin()) {
+                        case "win" -> {
+                            gameUI.setDealingText("You Won!!");
+                        }
+
+                        case "loss" -> {
+                            gameUI.setDealingText("You Lost..");
+                        }
+
+                        case "tie" -> {
+                            gameUI.setDealingText("Tie..");
+                        }
+                    }
+
+                    Platform.runLater(() -> {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        gameUI.removeDealingText();
+
+                        gameModel.setTurnState(GameModel.TurnState.Reset);
+                    });
+                }
+
+                // every tick
+                gameUI.updateMoneyLabel(gameModel.playerMoney);
             }
         };
     }
