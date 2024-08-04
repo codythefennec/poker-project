@@ -144,6 +144,7 @@ public class GameScene {
                     switch (gameModel.checkWin()) {
                         case "win" -> {
                             gameUI.setDealingText("You Won!!");
+                            gameModel.awardPot();
                         }
 
                         case "loss" -> {
@@ -152,6 +153,7 @@ public class GameScene {
 
                         case "tie" -> {
                             gameUI.setDealingText("Tie..");
+                            gameModel.awardMoney(gameModel.currentBet);
                         }
                     }
 

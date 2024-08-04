@@ -50,6 +50,15 @@ public class GameModel {
         playerHand = CardGenerator.generateHand();
     }
 
+    public void awardMoney(int amount) {
+        playerMoney += amount;
+    }
+
+    public void awardPot() {
+        playerMoney += currentBet * 2;
+        currentBet = 0;
+    }
+
     public String checkWin() {
         // check dealer hand and calc value
         int dealerScore = calculateHandValue(dealerHand);
@@ -210,7 +219,7 @@ public class GameModel {
         } else if (ascending) {
             return 4;
         } else {
-            return 1; // high card </3
+            return 0; // high card </3
         }
     }
 
