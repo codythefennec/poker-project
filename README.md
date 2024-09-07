@@ -85,7 +85,3 @@ Using your mouse you can choose to "look up" and see the dealer, this mostly rep
 #### Interacting with the dealer
 
 Occasionaly the dealer will speak with you, or you can choose to initiate conversations.
-
-### NSFW (?)
-
-// TBD
