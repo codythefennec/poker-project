@@ -48,7 +48,7 @@ public class TitleScene {
         titleText.setFont(font.fontOfSize(80));
         titleText.setTextAlignment(TextAlignment.CENTER);
         titleText.setFill(Color.WHITE);
-        titleText.setText("Furry Poker");
+        titleText.setText("Poker Project");
 
         // button container bg
         buttonContainerBg = new Rectangle(346,158, 400, 569);
