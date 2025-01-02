@@ -227,6 +227,7 @@ public class GameModel {
     public CameraState getCameraState() {
         return cameraState;
     }
+
     public void setCameraState(CameraState newState) {
         cameraState = newState;
     }
@@ -235,6 +236,7 @@ public class GameModel {
     public TurnState getTurnState() {
         return turnState;
     }
+
     public void setTurnState(TurnState turnState) {
         this.turnState = turnState;
     }
@@ -243,6 +245,7 @@ public class GameModel {
     public PlayerState getPlayerState() {
         return playerState;
     }
+
     public void setPlayerState(PlayerState playerState) {
         this.playerState = playerState;
     }

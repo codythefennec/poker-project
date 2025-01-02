@@ -12,6 +12,7 @@ public class CardGenerator {
 
         return hand;
     }
+
     public static Card getRandCard() {
         Random rand = new Random();
 
