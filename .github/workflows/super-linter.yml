@@ -26,7 +26,7 @@ jobs:
         env:
           FIX_JAVA: true
           VALIDATE_JAVA: true
-          FILTER_REGEX_INCLUDE: ^src/
+          FILTER_REGEX_INCLUDE: ^src/main/java/*
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
