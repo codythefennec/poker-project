@@ -4,7 +4,6 @@ import java.io.InputStream;
 
 public class FontManager {
     private final InputStream inStream;
-    
     public FontManager(String fontPath) {
         System.out.println(fontPath);
         inStream =  this.getClass().getResourceAsStream(fontPath);
