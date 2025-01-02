@@ -1,8 +1,8 @@
 ## Furry Poker Project
 
 - Coded by: [codythefennec](https://github.com/codythefennec)
-
 - Little poker game created in JavaFX :3
+[![Super-Linter](https://github.com/codythefennec/poker-project/actions/workflows/super-linter.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 # Features
 
